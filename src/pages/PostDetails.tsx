@@ -1,8 +1,13 @@
-import { Container, Divider, Typography } from "@mui/material";
+import { Container, Divider, styled, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useGlobalState from "../hooks/useContext";
 import { Post } from "../types/Post";
+
+const DescriptionStyle = styled(Typography)(({ theme }) => ({
+    ...theme.typography.h5,
+    marginTop: 10,
+}));
 
 export function PostDetails() {
     const [post, setPost] = useState<Post | undefined>();
@@ -21,11 +26,23 @@ export function PostDetails() {
                     <Typography
                         variant="h2"
                         sx={{
-                            my: 5
+                            mt: 5
                         }}>
                         {post.title}
                     </Typography>
-                    <Divider />
+                    <Divider sx={{ my: 3 }} />
+                    <Typography variant="overline">
+                        {post.publish_date}
+                    </Typography>
+                    <Typography variant="body1">
+                        by {post.author}
+                    </Typography>
+                    <Typography variant="h5" sx={{ my: 3 }}>
+                        {post.description}
+                    </Typography>
+                    <p>
+                        {post.content}
+                    </p>
                 </Container>
             }
         </>
