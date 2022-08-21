@@ -1,3 +1,5 @@
+import { Comment } from "./Comment";
+
 export type Post = {
     id: number;
     title: string;
@@ -7,6 +9,6 @@ export type Post = {
     description: string;
     content: string;
 
-    comments?: Comment[];
+    comments: Comment[];
 }
 

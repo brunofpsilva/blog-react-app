@@ -1,19 +1,13 @@
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
-import { Container, Stack } from "@mui/system";
-import { useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import useGlobalState from "../hooks/useContext"
+import { Container } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 import { Post } from "../types/Post";
+import useGlobalState from "../hooks/useContext";
 
 export default function Home() {
-    const { fetchPosts, posts } = useGlobalState();
+    const { posts } = useGlobalState();
+
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!posts.length) fetchPosts()
-        console.log(posts);
-
-    }, [fetchPosts, posts])
 
     const handleClickButton = (post: number) => {
         navigate(`/${post}`)
@@ -39,7 +33,11 @@ export default function Home() {
                 spacing={3}>
 
                 {posts.map((post: Post) => (
-                    <Grid item md={4} xs={12}>
+                    <Grid
+                        key={post.id}
+                        item
+                        md={4}
+                        xs={12}>
                         <Box>
                             <Typography variant="h5">
                                 {post.title}

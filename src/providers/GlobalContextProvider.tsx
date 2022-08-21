@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { Comment } from "../types/Comment";
 import { Post } from "../types/Post";
 
 export type GlobalContextProps = {
@@ -25,8 +26,27 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     const [posts, setPosts] = useState<Post[]>([]);
 
     const fetchPosts = async () => {
-        const response: Post[] = await (await fetch("http://localhost:9000/posts")).json();
-        setPosts(response);
+        let comments: Comment[] = [];
+
+        const posts: Post[] = await (await fetch("http://localhost:9000/posts")).json();
+        const comments_temp: Comment[] = await (await fetch("http://localhost:9000/comments")).json();
+
+        comments_temp.map((_comment) => {
+            _comment.replyComments = [];
+            if (_comment.parent_id === null) {
+                comments.push(_comment);
+            } else {
+                const parent_index = comments.findIndex((_p) => _p.id === _comment.parent_id);
+
+                if (parent_index === -1) {
+
+                }
+
+                comments[parent_index].replyComments.push(_comment);
+            }
+        })
+
+        setPosts(posts);
     }
 
     const newComment = (post: string) => {
@@ -36,6 +56,10 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     const getPost = (_id: number) => {
         return posts.find((post) => post.id === _id);
     }
+
+    useEffect(() => {
+        fetchPosts()
+    }, [])
 
     return (
         <GlobalContext.Provider
