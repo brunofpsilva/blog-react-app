@@ -9,7 +9,7 @@ interface IProps {
 export function PostCommentsList({ post }: IProps) {
     return (
         <List disablePadding>
-            {/* {post.comments.map((comment) => {
+            {post.comments.map((comment) => {
                 const { content, date, id, user, replyComments } = comment;
                 const hasReply = replyComments.length > 0;
 
@@ -36,7 +36,7 @@ export function PostCommentsList({ post }: IProps) {
                         }
                     </Box>
                 )
-            })} */}
+            })}
         </List>
     )
 }
