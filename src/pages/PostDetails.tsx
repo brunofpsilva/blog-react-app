@@ -13,6 +13,7 @@ export function PostDetails() {
 
     useEffect(() => {
         if (!post) setPost(getPost(+id));
+        console.log(post);
     }, [getPost, post, id]);
 
     return (
