@@ -1,65 +1,124 @@
-import { Avatar, Divider, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+// mui
+import {
+    Box,
+    Button,
+    Divider,
+    TextField,
+} from "@mui/material";
+import { Form, FormikProvider, useFormik } from "formik";
+// react
+import { useState } from "react";
+import { CustomListItem } from "../components/CustomListItem";
+import { Comment } from "../types/Comment";
+import * as Yup from 'yup';
 
 interface IProps {
-    content: string;
-    date: string;
-    user: string;
+    comment: Comment;
     hasReply?: boolean;
     levelReply: number;
 }
 
 export function PostCommentsItem({
-    content,
-    date,
-    user,
+    comment,
     hasReply,
+    levelReply
 }: IProps) {
+    const [onReply, setReply] = useState(false);
+
+    const handleOpenReply = () => {
+        setReply(true);
+    };
+
+    const handleCloseReply = () => {
+        setReply(false);
+        replyForm.setValues(defaultReply);
+    };
+
+    const defaultReply: Comment = {
+        content: "ok",
+        date: "2022-08-23",
+        parent_id: comment.id,
+        user: "Bruno Silva",
+        postId: comment.postId,
+        replyComments: [],
+        id: -1
+    }
+
+    const replyForm = useFormik<Comment>({
+        initialValues: defaultReply,
+        validationSchema: Yup.object().shape({
+            content: Yup.string().required("Required! Cannot be empty.")
+        }),
+        onSubmit: async (values) => {
+            console.log("ok");
+        }
+    });
+
+    const { touched, errors, handleSubmit, getFieldProps } = replyForm;
+
     return (
         <>
-            <ListItem
-                disableGutters
-                sx={{
-                    alignItems: 'flex-start',
-                    py: 2,
-                    ...(hasReply && {
-                        ml: 'auto',
-                        width: (theme) => `calc(100% - ${theme.spacing(7)})`,
-                    }),
-                }}>
+            <CustomListItem
+                comment={comment}
+                hasReply={hasReply}
+                levelReply={levelReply}
+                action={
+                    <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={handleOpenReply}
+                        sx={{ position: 'absolute', right: 0 }}>
+                        Reply
+                    </Button>
+                } />
 
-                <ListItemAvatar>
-                    <Avatar alt={user} sx={{ width: 40, height: 40 }} />
-                </ListItemAvatar>
-
-                <ListItemText
-                    primary={user}
-                    primaryTypographyProps={{ variant: 'subtitle1' }}
-                    secondary={
-                        <>
-                            <Typography
-                                gutterBottom
-                                variant="caption"
+            {
+                onReply && (
+                    <FormikProvider value={replyForm}>
+                        <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+                            <Box
                                 sx={{
-                                    display: 'block',
-                                    color: 'text.disabled',
-                                }}
-                            >
-                                {date}
-                            </Typography>
-                            <Typography component="span" variant="body2">
-                                {content}
-                            </Typography>
-                        </>
-                    } />
-            </ListItem>
+                                    mb: 3,
+                                    ml: 'auto',
+                                    width: (theme) => `calc(100% - ${theme.spacing(7 * levelReply)})`,
+                                }}>
+                                <TextField
+                                    fullWidth
+                                    size="small"
+                                    {...getFieldProps('content')}
+                                    error={Boolean(touched.content && errors.content)}
+                                    helperText={touched.content && errors.content}
+                                    placeholder={`Reply to ${comment.user}...`}
+                                />
+                                <Box sx={{ mt: 2 }}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        size="small">
+                                        Comment
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        size="small"
+                                        color="inherit"
+                                        onClick={handleCloseReply}
+                                        sx={{ ml: 1 }} >
+                                        Cancel
+                                    </Button>
+                                </Box>
+                            </Box>
+
+                        </Form>
+                    </FormikProvider>
+                )
+            }
 
             <Divider
                 sx={{
                     ml: 'auto',
-                    width: (theme) => `calc(100% - ${theme.spacing(7)})`,
+                    width: (theme) => `calc(100% - ${theme.spacing(7 * levelReply)})`,
                 }}
             />
-
         </>
     )
 }

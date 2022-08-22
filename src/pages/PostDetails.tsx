@@ -1,8 +1,20 @@
-import { Avatar, Box, Container, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+// mui
+import {
+    Container,
+    Divider,
+    Typography
+} from "@mui/material";
+// react
+import {
+    useEffect,
+    useState
+} from "react";
 import { useParams } from "react-router-dom";
+// hooks
 import useGlobalState from "../hooks/useContext";
+// types
 import { Post } from "../types/Post";
+// components
 import { PostCommentsList } from "./PostCommentList";
 
 export function PostDetails() {
@@ -13,7 +25,6 @@ export function PostDetails() {
 
     useEffect(() => {
         if (!post) setPost(getPost(+id));
-        console.log(post);
     }, [getPost, post, id]);
 
     return (

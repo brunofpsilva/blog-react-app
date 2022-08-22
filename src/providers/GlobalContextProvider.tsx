@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { Comment } from "../types/Comment";
 import { Post } from "../types/Post";
+import { nest } from "../utils";
 
 export type GlobalContextProps = {
     posts: Post[];
@@ -12,8 +13,8 @@ export type GlobalContextProps = {
 const initialState: GlobalContextProps = {
     posts: [],
     fetchPosts: () => { },
-    newComment: (post: string) => { },
-    getPost: (post: number) => { return undefined }
+    newComment: (_post: string) => { },
+    getPost: (_post: number) => { return undefined }
 }
 
 export const GlobalContext = createContext(initialState);
@@ -36,7 +37,7 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         posts.map((post) => {
             post.comments = [];
             nestedComments.map(comment => {
-                if(post.id === comment.postId) {
+                if (post.id === comment.postId) {
                     post.comments.push(comment);
                 }
                 return null;
@@ -45,26 +46,6 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
         })
 
         setPosts(posts);
-    }
-
-    const nest = (comments: Comment[]) => {
-        var map: any = {}, node, roots = [], i;
-
-        for (i = 0; i < comments.length; i += 1) {
-            map[comments[i].id] = i;
-            comments[i].replyComments = [];
-        }
-
-        for (i = 0; i < comments.length; i += 1) {
-            node = comments[i];
-            if (node.parent_id !== null) {
-                comments[map[node.parent_id]].replyComments.push(node);
-            } else {
-                roots.push(node);
-            }
-        }
-
-        return roots;
     }
 
     const newComment = (post: string) => {

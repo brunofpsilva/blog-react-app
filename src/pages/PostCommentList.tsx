@@ -1,6 +1,12 @@
-import { Box, List } from "@mui/material";
+// mui
+import {
+    Box,
+    List
+} from "@mui/material";
+// models
 import { Comment } from "../types/Comment";
 import { Post } from "../types/Post";
+// components
 import { PostCommentsItem } from "./PostCommentItem";
 
 interface IProps {
@@ -9,49 +15,43 @@ interface IProps {
 
 export function PostCommentsList({ post }: IProps) {
 
-    const CommentReply: any = (comment: Comment) => {
-        let level = 1;
+    const CommentReply: any = (comment: Comment, level: number) => {
+        level++;
         const hasReply = comment.replyComments.length > 0;
         return (
-            <>
+            <Box key={comment.id}>
                 <PostCommentsItem
-                    key={comment.id}
-                    date={comment.date}
-                    user={comment.user}
-                    content={comment.content}
+                    comment={comment}
                     hasReply
                     levelReply={level}
                 />
                 {
                     hasReply &&
                     comment.replyComments.map((reply) => (
-                        CommentReply(reply)
+                        CommentReply(reply, level)
                     ))
                 }
-            </>
-
+            </Box>
         )
     }
 
     return (
         <List disablePadding>
             {post.comments.map((comment) => {
-                const { content, date, id, user, replyComments } = comment;
+                const { replyComments } = comment;
                 const hasReply = replyComments.length > 0;
                 const level = 0;
 
                 return (
-                    <Box key={id}>
+                    <Box key={comment.id}>
                         <PostCommentsItem
-                            content={content}
-                            date={date}
-                            user={user}
+                            comment={comment}
                             levelReply={level}
                         />
                         {
                             hasReply &&
                             replyComments.map((reply) => (
-                                CommentReply(reply)
+                                CommentReply(reply, level)
                             ))
                         }
                     </Box>
