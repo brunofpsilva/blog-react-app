@@ -9,7 +9,8 @@ interface IProps {
 
 export function PostCommentsList({ post }: IProps) {
 
-    const CommentItem: any = (comment: Comment) => {
+    const CommentReply: any = (comment: Comment) => {
+        let level = 1;
         const hasReply = comment.replyComments.length > 0;
         return (
             <>
@@ -19,11 +20,12 @@ export function PostCommentsList({ post }: IProps) {
                     user={comment.user}
                     content={comment.content}
                     hasReply
+                    levelReply={level}
                 />
                 {
                     hasReply &&
                     comment.replyComments.map((reply) => (
-                        CommentItem(reply)
+                        CommentReply(reply)
                     ))
                 }
             </>
@@ -36,7 +38,7 @@ export function PostCommentsList({ post }: IProps) {
             {post.comments.map((comment) => {
                 const { content, date, id, user, replyComments } = comment;
                 const hasReply = replyComments.length > 0;
-
+                const level = 0;
 
                 return (
                     <Box key={id}>
@@ -44,11 +46,12 @@ export function PostCommentsList({ post }: IProps) {
                             content={content}
                             date={date}
                             user={user}
+                            levelReply={level}
                         />
                         {
                             hasReply &&
                             replyComments.map((reply) => (
-                                CommentItem(reply)
+                                CommentReply(reply)
                             ))
                         }
                     </Box>

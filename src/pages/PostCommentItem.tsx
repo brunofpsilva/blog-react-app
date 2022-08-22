@@ -5,6 +5,7 @@ interface IProps {
     date: string;
     user: string;
     hasReply?: boolean;
+    levelReply: number;
 }
 
 export function PostCommentsItem({
@@ -49,11 +50,7 @@ export function PostCommentsItem({
                                 {content}
                             </Typography>
                         </>
-                    }
-                >
-
-                </ListItemText>
-
+                    } />
             </ListItem>
 
             <Divider
