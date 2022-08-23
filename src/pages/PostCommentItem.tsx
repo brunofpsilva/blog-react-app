@@ -5,13 +5,25 @@ import {
     Divider,
     TextField,
 } from "@mui/material";
-import { Form, FormikProvider, useFormik } from "formik";
+// formik
+import {
+    Form,
+    FormikProvider,
+    useFormik
+} from "formik";
 // react
 import { useState } from "react";
+// components
 import { CustomListItem } from "../components/CustomListItem";
-import { Comment, CommentForm } from "../types/Comment";
-import * as Yup from 'yup';
+// types
+import {
+    Comment,
+    CommentForm
+} from "../types/Comment";
+// hooks
 import useGlobalState from "../hooks/useContext";
+//
+import * as Yup from 'yup';
 
 interface IProps {
     comment: Comment;
@@ -25,7 +37,7 @@ export function PostCommentsItem({
     levelReply
 }: IProps) {
     const [onReply, setReply] = useState(false);
-    const { newComment } = useGlobalState();
+    const { newReply } = useGlobalState();
 
     const handleOpenReply = () => {
         setReply(true);
@@ -50,7 +62,7 @@ export function PostCommentsItem({
             content: Yup.string().required("Required! Cannot be empty.")
         }),
         onSubmit: async (values) => {
-            newComment(comment.postId, values)
+            newReply(comment.postId, values)
             handleCloseReply();
         }
     });

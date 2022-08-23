@@ -1,6 +1,8 @@
+import { PostfixUnaryExpression } from "typescript";
 import { Comment } from "../types/Comment";
+import { Post } from "../types/Post";
 
-export const nest = (comments: Comment[]) => {
+export const _nest = (comments: Comment[]) => {
     var map: any = {}, node, roots = [], i;
 
     for (i = 0; i < comments.length; i += 1) {
@@ -18,4 +20,19 @@ export const nest = (comments: Comment[]) => {
     }
 
     return roots;
+}
+
+export const _addReply = (comments: Comment[], comment: Comment) => {
+    comment.replyComments = []
+    comments.map((_c) => {
+        // eslint-disable-next-line
+        if (_c.id == comment.parent_id) {
+            _c.replyComments.push(comment)
+        } else {
+            _addReply(_c.replyComments, comment)
+        }
+        return null;
+    });
+
+    return comments;
 }

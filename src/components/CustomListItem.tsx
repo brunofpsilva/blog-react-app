@@ -1,4 +1,4 @@
-import * as Yup from 'yup';
+// mui
 import {
     Avatar,
     Box,
@@ -9,9 +9,20 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-import { Form, FormikProvider, useFormik } from "formik";
+// formik
+import {
+    Form,
+    FormikProvider,
+    useFormik
+} from "formik";
+// react
 import { useState } from "react";
-import { Comment } from "../types/Comment";
+// types
+import { Comment, CommentForm } from "../types/Comment";
+// hooks
+import useGlobalState from '../hooks/useContext';
+//
+import * as Yup from 'yup';
 
 interface IProps {
     comment: Comment;
@@ -26,8 +37,8 @@ export function CustomListItem({
     hasReply,
     levelReply
 }: IProps) {
-
     const [onEdit, setEdit] = useState(false);
+    const { editComment } = useGlobalState();
 
     const handleOpenEdit = () => {
         setEdit(true);
@@ -35,16 +46,29 @@ export function CustomListItem({
 
     const handleCloseEdit = () => {
         setEdit(false);
-        editForm.setValues(comment);
+        editForm.setValues({
+            content: comment.content,
+            date: comment.date,
+            parent_id: comment.parent_id,
+            postId: comment.postId,
+            user: comment.user
+        });
     };
 
-    const editForm = useFormik<Comment>({
-        initialValues: comment,
+    const editForm = useFormik<CommentForm>({
+        initialValues: {
+            content: comment.content,
+            date: comment.date,
+            parent_id: comment.parent_id,
+            postId: comment.postId,
+            user: comment.user
+        },
         validationSchema: Yup.object().shape({
             content: Yup.string().required("Required! Cannot be empty.")
         }),
         onSubmit: async (values) => {
-            console.log("ok");
+            editComment(comment.id, values)
+            handleCloseEdit()
         }
     })
 
@@ -96,7 +120,7 @@ export function CustomListItem({
                             </>
                             :
                             <FormikProvider value={editForm}>
-                                <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+                                <Form autoComplete="off" onSubmit={handleSubmit}>
                                     <TextField
                                         size="small"
                                         multiline
@@ -107,6 +131,7 @@ export function CustomListItem({
                                     <Box sx={{ display: "block", mt: 1 }}>
                                         <Button
                                             size="small"
+                                            type="submit"
                                             variant="outlined">
                                             Confirm
                                         </Button>
