@@ -31,9 +31,9 @@ export type GlobalContextProps = {
 const initialState: GlobalContextProps = {
     posts: [],
     fetchPosts: () => { },
-    newComment: (_post: string | number, comment: CommentForm) => { },
-    newReply: (_post: string | number, comment: CommentForm) => { },
-    editComment: (id: number, comment: CommentForm) => { },
+    newComment: (_post: string | number, _comment: CommentForm) => { },
+    newReply: (_post: string | number, _comment: CommentForm) => { },
+    editComment: (_id: number, _comment: CommentForm) => { },
     getPost: (_post: number) => { return undefined }
 }
 
