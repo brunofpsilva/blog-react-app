@@ -9,8 +9,9 @@ import { Form, FormikProvider, useFormik } from "formik";
 // react
 import { useState } from "react";
 import { CustomListItem } from "../components/CustomListItem";
-import { Comment } from "../types/Comment";
+import { Comment, CommentForm } from "../types/Comment";
 import * as Yup from 'yup';
+import useGlobalState from "../hooks/useContext";
 
 interface IProps {
     comment: Comment;
@@ -24,6 +25,7 @@ export function PostCommentsItem({
     levelReply
 }: IProps) {
     const [onReply, setReply] = useState(false);
+    const { newComment } = useGlobalState();
 
     const handleOpenReply = () => {
         setReply(true);
@@ -34,23 +36,22 @@ export function PostCommentsItem({
         replyForm.setValues(defaultReply);
     };
 
-    const defaultReply: Comment = {
-        content: "ok",
+    const defaultReply: CommentForm = {
+        content: "",
         date: "2022-08-23",
         parent_id: comment.id,
         user: "Bruno Silva",
         postId: comment.postId,
-        replyComments: [],
-        id: -1
     }
 
-    const replyForm = useFormik<Comment>({
+    const replyForm = useFormik<CommentForm>({
         initialValues: defaultReply,
         validationSchema: Yup.object().shape({
             content: Yup.string().required("Required! Cannot be empty.")
         }),
         onSubmit: async (values) => {
-            console.log("ok");
+            newComment(comment.postId, values)
+            handleCloseReply();
         }
     });
 
@@ -107,7 +108,6 @@ export function PostCommentsItem({
                                     </Button>
                                 </Box>
                             </Box>
-
                         </Form>
                     </FormikProvider>
                 )
