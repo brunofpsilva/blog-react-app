@@ -4,6 +4,7 @@ import {
     Button,
     Container,
     Divider,
+    IconButton,
     TextField,
     Typography
 } from "@mui/material";
@@ -20,9 +21,10 @@ import { CommentForm } from "../types/Comment";
 // types
 import { Post } from "../types/Post";
 // components
-import { PostCommentsList } from "./PostCommentList";
 //
 import * as Yup from 'yup';
+import { PostCommentsList } from "./sections/PostCommentList";
+import { CgCloseO, CgComment } from "react-icons/cg";
 
 export function PostDetails() {
     const [post, setPost] = useState<Post | undefined>();
@@ -69,13 +71,13 @@ export function PostDetails() {
         <>
             {post &&
                 <Container>
-
                     <Typography
-                        variant="h2"
+                        variant="h5"
                         sx={{
-                            mt: 5
+                            my: 3,
+                            fontWeight: 600
                         }}>
-                        {post.title}
+                        {post.description}
                     </Typography>
 
                     <Divider sx={{ my: 3 }} />
@@ -88,21 +90,21 @@ export function PostDetails() {
                         by {post.author}
                     </Typography>
 
-                    <Typography variant="h5" sx={{ my: 3 }}>
-                        {post.description}
-                    </Typography>
-
                     <p>
                         {post.content}
                     </p>
 
                     <Divider />
 
-                    <Typography sx={{ my: 2 }} variant="h6">Comments:</Typography>
+                    <Typography sx={{ my: 2, fontWeight: 600 }} variant="subtitle1">Comments:</Typography>
 
                     {
                         !onComment &&
-                        <Button variant="outlined" onClick={handleOpenComment}>
+                        <Button
+                            size="small"
+                            variant="contained"
+                            startIcon={<CgComment />}
+                            onClick={handleOpenComment}>
                             Comment
                         </Button>
                     }
@@ -127,6 +129,7 @@ export function PostDetails() {
                                             <Button
                                                 type="submit"
                                                 variant="contained"
+                                                startIcon={<CgComment />}
                                                 size="small">
                                                 Comment
                                             </Button>
@@ -134,6 +137,7 @@ export function PostDetails() {
                                                 variant="contained"
                                                 size="small"
                                                 color="inherit"
+                                                startIcon={<CgCloseO />}
                                                 onClick={handleCloseComment}
                                                 sx={{ ml: 1 }} >
                                                 Cancel

@@ -14,16 +14,17 @@ import {
 // react
 import { useState } from "react";
 // components
-import { CustomListItem } from "../components/CustomListItem";
+import { CustomListItem } from "../../components/CustomListItem";
 // types
 import {
     Comment,
     CommentForm
-} from "../types/Comment";
+} from "../../types/Comment";
 // hooks
-import useGlobalState from "../hooks/useContext";
+import useGlobalState from "../../hooks/useContext";
 //
 import * as Yup from 'yup';
+import { CgCloseO, CgComment, CgMailReply } from "react-icons/cg";
 
 interface IProps {
     comment: Comment;
@@ -78,7 +79,8 @@ export function PostCommentsItem({
                 action={
                     <Button
                         size="small"
-                        variant="outlined"
+                        variant="text"
+                        startIcon={<CgMailReply />}
                         onClick={handleOpenReply}
                         sx={{ position: 'absolute', right: 0 }}>
                         Reply
@@ -107,12 +109,14 @@ export function PostCommentsItem({
                                     <Button
                                         type="submit"
                                         variant="contained"
+                                        startIcon={<CgComment />}
                                         size="small">
                                         Comment
                                     </Button>
                                     <Button
                                         variant="contained"
                                         size="small"
+                                        startIcon={<CgCloseO />}
                                         color="inherit"
                                         onClick={handleCloseReply}
                                         sx={{ ml: 1 }} >

@@ -4,8 +4,8 @@ import {
     List
 } from "@mui/material";
 // models
-import { Comment } from "../types/Comment";
-import { Post } from "../types/Post";
+import { Post } from "../../types/Post";
+import { Comment } from "../../types/Comment";
 // components
 import { PostCommentsItem } from "./PostCommentItem";
 

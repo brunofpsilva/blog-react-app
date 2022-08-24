@@ -3,6 +3,7 @@ import {
     Avatar,
     Box,
     Button,
+    IconButton,
     ListItem,
     ListItemAvatar,
     ListItemText,
@@ -23,6 +24,7 @@ import { Comment, CommentForm } from "../types/Comment";
 import useGlobalState from '../hooks/useContext';
 //
 import * as Yup from 'yup';
+import { CgRename } from "react-icons/cg";
 
 interface IProps {
     comment: Comment;
@@ -87,7 +89,7 @@ export function CustomListItem({
             }}>
 
             <ListItemAvatar>
-                <Avatar alt={comment.user} sx={{ width: 40, height: 40 }} />
+                <Avatar alt={comment.user} sx={{ mt: 1, width: 40, height: 40 }} />
             </ListItemAvatar>
 
             <ListItemText
@@ -112,10 +114,9 @@ export function CustomListItem({
                                 </Typography>
                                 <Button
                                     size="small"
-                                    variant="outlined"
                                     onClick={handleOpenEdit}
                                     sx={{ display: "block", mt: 1 }}>
-                                    Edit
+                                    Editar
                                 </Button>
                             </>
                             :
