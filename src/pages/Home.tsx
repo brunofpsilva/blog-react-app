@@ -1,3 +1,4 @@
+// mui
 import {
     alpha,
     Card,
@@ -8,13 +9,16 @@ import {
     Typography
 } from "@mui/material";
 import { Container } from "@mui/system";
+// react
 import {
     Link,
-    useNavigate
 } from "react-router-dom";
+// types
 import { Post } from "../types/Post";
+// hooks
 import useGlobalState from "../hooks/useContext";
-import { CgComment, CgShare } from "react-icons/cg";
+// icons
+import { CgComment } from "react-icons/cg";
 
 const CardStyle = styled(Card)(({ theme }) => ({
     padding: 20,

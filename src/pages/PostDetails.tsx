@@ -4,7 +4,6 @@ import {
     Button,
     Container,
     Divider,
-    IconButton,
     TextField,
     Typography
 } from "@mui/material";
@@ -21,10 +20,14 @@ import { CommentForm } from "../types/Comment";
 // types
 import { Post } from "../types/Post";
 // components
+import { PostCommentsList } from "./sections/PostCommentList";
+//icons
+import {
+    CgCloseO,
+    CgComment
+} from "react-icons/cg";
 //
 import * as Yup from 'yup';
-import { PostCommentsList } from "./sections/PostCommentList";
-import { CgCloseO, CgComment } from "react-icons/cg";
 
 export function PostDetails() {
     const [post, setPost] = useState<Post | undefined>();

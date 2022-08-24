@@ -70,6 +70,7 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     }
 
     const newComment = async (post: string | number, comment: CommentForm) => {
+        // eslint-disable-next-line
         const index = posts.findIndex(_post => _post.id == post);
 
         posts[index].comments.push({

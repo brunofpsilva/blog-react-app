@@ -3,7 +3,6 @@ import {
     Avatar,
     Box,
     Button,
-    IconButton,
     ListItem,
     ListItemAvatar,
     ListItemText,
@@ -24,7 +23,6 @@ import { Comment, CommentForm } from "../types/Comment";
 import useGlobalState from '../hooks/useContext';
 //
 import * as Yup from 'yup';
-import { CgRename } from "react-icons/cg";
 
 interface IProps {
     comment: Comment;
