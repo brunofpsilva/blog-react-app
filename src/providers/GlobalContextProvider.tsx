@@ -1,10 +1,7 @@
 // axios
 import axios from "axios";
 // react
-import {
-    createContext,
-    ReactNode
-} from "react";
+import { ReactNode } from "react";
 // react-query
 import {
     useQuery,
@@ -18,24 +15,9 @@ import {
 import { Post } from "../types/Post";
 // utils
 import { _nest } from "../utils";
+import { GlobalContext } from "./GlobalContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
-
-export type GlobalContextProps = {
-    posts: Post[];
-    addComment: (post: string | number, comment: CommentForm) => Promise<void>;
-    editComment: (id: number, comment: CommentForm) => Promise<void>;
-    getPost: (post: number) => Post | undefined;
-}
-
-const initialState: GlobalContextProps = {
-    posts: [],
-    addComment: async () => { },
-    editComment: async () => { },
-    getPost: () => undefined
-}
-
-export const GlobalContext = createContext(initialState);
 
 type GlobalProviderProps = {
     children: ReactNode;
@@ -44,7 +26,7 @@ type GlobalProviderProps = {
 const fetchPosts = async (): Promise<Post[]> => {
     const [{ data: posts }, { data: comments }] = await Promise.all([
         axios.get<Omit<Post, "comments">[]>(`${API_URL}/posts`),
-        axios.get<Comment[]>(`${API_URL}/comments`),
+        axios.get<Omit<Comment, "replyComments">[]>(`${API_URL}/comments`),
     ]);
     const roots = _nest(comments);
 

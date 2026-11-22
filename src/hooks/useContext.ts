@@ -1,6 +1,6 @@
 
 import { useContext } from 'react';
-import { GlobalContext } from '../providers/GlobalContextProvider';
+import { GlobalContext } from '../providers/GlobalContext';
 
 // ----------------------------------------------------------------------
 

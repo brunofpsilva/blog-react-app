@@ -3,6 +3,7 @@ import {
     Box,
     List
 } from "@mui/material";
+import { ReactNode } from "react";
 // models
 import { Post } from "../../types/Post";
 import { Comment } from "../../types/Comment";
@@ -15,7 +16,7 @@ interface IProps {
 
 export function PostCommentsList({ post }: IProps) {
 
-    const CommentReply: any = (comment: Comment, level: number) => {
+    const CommentReply = (comment: Comment, level: number): ReactNode => {
         level++;
         const hasReply = comment.replyComments.length > 0;
         return (

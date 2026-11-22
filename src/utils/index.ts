@@ -1,23 +1,21 @@
-import { PostfixUnaryExpression } from "typescript";
 import { Comment } from "../types/Comment";
-import { Post } from "../types/Post";
 
-export const _nest = (comments: Comment[]) => {
-    var map: any = {}, node, roots = [], i;
+/** Builds the reply tree from a flat comment list (linked by parent_id) and returns the root comments. */
+export const _nest = (comments: Omit<Comment, "replyComments">[]): Comment[] => {
+    const byId = new Map<number, Comment>(
+        comments.map((comment) => [comment.id, { ...comment, replyComments: [] }])
+    );
+    const roots: Comment[] = [];
 
-    for (i = 0; i < comments.length; i += 1) {
-        map[comments[i].id] = i;
-        comments[i].replyComments = [];
-    }
-
-    for (i = 0; i < comments.length; i += 1) {
-        node = comments[i];
-        if (node.parent_id !== null) {
-            comments[map[node.parent_id]].replyComments.push(node);
-        } else {
-            roots.push(node);
-        }
+    for (const comment of byId.values()) {
+        const parent = comment.parent_id === null ? undefined : byId.get(comment.parent_id);
+        // a reply whose parent is missing is shown as a root comment instead of being dropped
+        if (parent) parent.replyComments.push(comment);
+        else roots.push(comment);
     }
 
     return roots;
 }
+
+/** Today's date as YYYY-MM-DD, the format the API stores. */
+export const today = () => new Date().toISOString().slice(0, 10);

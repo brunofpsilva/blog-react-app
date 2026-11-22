@@ -21,7 +21,7 @@ import useGlobalState from "../hooks/useContext";
 // icons
 import { CgComment } from "react-icons/cg";
 
-const CardStyle = styled(Card)(({ theme }) => ({
+const CardStyle = styled(Card)(() => ({
     padding: 20,
     minHeight: 200,
     boxShadow: `0 0 1px 0 ${alpha("#000", 0.15)}, 0 12px 20px -4px ${alpha("#000", 0.10)}`,

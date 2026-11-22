@@ -24,6 +24,7 @@ import {
 import useGlobalState from "../../hooks/useContext";
 //
 import * as Yup from 'yup';
+import { today } from "../../utils";
 import { CgCloseO, CgComment, CgMailReply } from "react-icons/cg";
 
 interface IProps {
@@ -51,7 +52,7 @@ export function PostCommentsItem({
 
     const defaultReply: CommentForm = {
         content: "",
-        date: "2022-08-23",
+        date: today(),
         parent_id: comment.id,
         user: "Bruno Silva",
         postId: comment.postId,

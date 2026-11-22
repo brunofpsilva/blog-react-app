@@ -23,6 +23,7 @@ import {
 } from "react-icons/cg";
 //
 import * as Yup from 'yup';
+import { today } from "../utils";
 
 export function PostDetails() {
     const [onComment, setComment] = useState(false);
@@ -42,7 +43,7 @@ export function PostDetails() {
 
     const defaultComment: CommentForm = {
         content: "",
-        date: "2022-08-23",
+        date: today(),
         parent_id: null,
         user: "Bruno Silva",
         postId: post ? post.id : -1,
