@@ -19,6 +19,8 @@ import {
     _nest
 } from "../utils";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export type GlobalContextProps = {
     posts: Post[];
     fetchPosts: () => void;
@@ -48,8 +50,8 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
 
     const fetchPosts = async () => {
         let nestedComments: Comment[] = [];
-        const posts: Post[] = await (await fetch("http://localhost:9000/posts")).json();
-        const comments: Comment[] = await (await fetch("http://localhost:9000/comments")).json();
+        const posts: Post[] = await (await fetch(`${API_URL}/posts`)).json();
+        const comments: Comment[] = await (await fetch(`${API_URL}/comments`)).json();
 
         comments.map((comment) => comment.replyComments = []);
         nestedComments = _nest(comments);
@@ -82,11 +84,11 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
             replyComments: [],
             user: comment.user
         });
-        await axios.post(`http://localhost:9000/posts/${post}/comments`, comment);
+        await axios.post(`${API_URL}/posts/${post}/comments`, comment);
     }
 
     const newReply = async (post: string | number, comment: CommentForm) => {
-        const response = await axios.post(`http://localhost:9000/posts/${post}/comments`, comment);
+        const response = await axios.post(`${API_URL}/posts/${post}/comments`, comment);
         // eslint-disable-next-line
         const index = posts.findIndex(_post => _post.id == post);
         const comments = _addReply(posts[index].comments, response.data);
@@ -100,7 +102,7 @@ export function GlobalProvider({ children }: GlobalProviderProps) {
     }
 
     const editComment = async (id: number, comment: CommentForm) => {
-        await axios.put(`http://localhost:9000/comments/${id}/`, comment);
+        await axios.put(`${API_URL}/comments/${id}/`, comment);
         window.location.reload()
     }
 

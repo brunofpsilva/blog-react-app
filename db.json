@@ -1,0 +1,156 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "Why we moved our frontend from Create React App to Vite",
+      "author": "Marta Ferreira",
+      "publish_date": "2026-10-28",
+      "slug": "cra-to-vite",
+      "description": "Dev server start-up went from 40 seconds to under one. Here is what the migration actually took.",
+      "content": "Create React App served us well for years, but it is no longer maintained and our cold starts kept getting slower. Vite serves source files as native ES modules during development and only bundles for production, so the dev server starts almost instantly. The migration itself was mostly mechanical: move index.html to the project root, rename REACT_APP_ variables to VITE_, and replace the Jest setup with Vitest. The hardest part was finding the few places where we relied on CRA's implicit Node polyfills."
+    },
+    {
+      "id": 2,
+      "title": "A practical guide to nested comments",
+      "author": "Rui Almeida",
+      "publish_date": "2026-10-15",
+      "slug": "nested-comments",
+      "description": "Store comments flat with a parent_id, build the tree on the client. Simple, and it scales further than you think.",
+      "content": "Threaded comments look like a tree, but storing them as a tree makes writes and queries awkward. A flat table where each comment points to its parent through a parent_id keeps the database simple. On the client you build the tree in a single pass: index every comment by id, then attach each one to its parent's list of replies. Root comments are the ones with no parent. The whole operation is O(n) and works for any depth."
+    },
+    {
+      "id": 3,
+      "title": "Form validation with Formik and Yup",
+      "author": "Inês Costa",
+      "publish_date": "2026-09-30",
+      "slug": "formik-yup-validation",
+      "description": "Declare the rules once as a schema and let the form library handle touched state and error messages.",
+      "content": "Hand-written validation tends to spread across onChange handlers and submit callbacks. With Yup you describe the shape of valid data once, and Formik runs that schema on change, on blur and on submit. Error messages only show for fields the user has touched, which avoids shouting at people before they type anything. The same schema can be reused on the server if you run Node there."
+    },
+    {
+      "id": 4,
+      "title": "Server state is not app state",
+      "author": "Marta Ferreira",
+      "publish_date": "2026-09-12",
+      "slug": "server-state",
+      "description": "Caching, refetching and invalidation are hard problems. Stop solving them in a context provider.",
+      "content": "Most global state in a typical React app is a copy of data that lives on a server. Keeping that copy fresh means handling loading states, errors, retries, deduplication and invalidation after mutations. A query library such as TanStack Query does all of that for you: you describe how to fetch the data, and after a mutation you tell it which queries are now stale. The rest of your components just read the cache."
+    },
+    {
+      "id": 5,
+      "title": "Designing a card grid that works on every screen",
+      "author": "Tiago Santos",
+      "publish_date": "2026-08-27",
+      "slug": "responsive-card-grid",
+      "description": "One column on phones, four on desktops, and no media queries written by hand.",
+      "content": "A responsive grid comes down to deciding how many columns each breakpoint gets. MUI's Grid lets you set that per breakpoint with a single size prop, so a card can take the full width on small screens and a quarter of it on large ones. Give every card the same minimum height and push the footer to the bottom with flexbox, and the rows stay aligned even when the descriptions have different lengths."
+    },
+    {
+      "id": 6,
+      "title": "Mocking a REST API in five minutes",
+      "author": "Rui Almeida",
+      "publish_date": "2026-08-03",
+      "slug": "mock-rest-api",
+      "description": "json-server turns a JSON file into a full REST API, which is all a frontend prototype needs.",
+      "content": "When the backend does not exist yet, you can still build against a realistic API. json-server reads a JSON file and exposes every top-level key as a resource with GET, POST, PUT, PATCH and DELETE routes, plus filtering, sorting and nested routes such as /posts/1/comments. Changes are written back to the file, so the data survives restarts."
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "postId": 1,
+      "parent_id": null,
+      "user": "Joana Lopes",
+      "date": "2026-10-29",
+      "content": "Did you keep Jest for the existing tests or move everything to Vitest?"
+    },
+    {
+      "id": 2,
+      "postId": 1,
+      "parent_id": 1,
+      "user": "Marta Ferreira",
+      "date": "2026-10-29",
+      "content": "Everything moved to Vitest. The API is close enough to Jest that most tests ran unchanged."
+    },
+    {
+      "id": 3,
+      "postId": 1,
+      "parent_id": 2,
+      "user": "Joana Lopes",
+      "date": "2026-10-30",
+      "content": "Good to know, that was the part I was worried about."
+    },
+    {
+      "id": 4,
+      "postId": 1,
+      "parent_id": null,
+      "user": "Pedro Martins",
+      "date": "2026-10-31",
+      "content": "The environment variable rename caught us too. Worth a search across CI configs as well."
+    },
+    {
+      "id": 5,
+      "postId": 2,
+      "parent_id": null,
+      "user": "Sofia Ribeiro",
+      "date": "2026-10-16",
+      "content": "How do you handle a reply whose parent was deleted?"
+    },
+    {
+      "id": 6,
+      "postId": 2,
+      "parent_id": 5,
+      "user": "Rui Almeida",
+      "date": "2026-10-16",
+      "content": "We soft-delete comments, so the parent always exists. It just renders as \"comment removed\"."
+    },
+    {
+      "id": 7,
+      "postId": 2,
+      "parent_id": null,
+      "user": "Miguel Sousa",
+      "date": "2026-10-18",
+      "content": "Clear explanation of the single-pass approach, thanks."
+    },
+    {
+      "id": 8,
+      "postId": 3,
+      "parent_id": null,
+      "user": "Ana Pereira",
+      "date": "2026-10-02",
+      "content": "Do you validate on blur or on change? On change feels noisy for long forms."
+    },
+    {
+      "id": 9,
+      "postId": 3,
+      "parent_id": 8,
+      "user": "Inês Costa",
+      "date": "2026-10-02",
+      "content": "Formik validates on both by default, but errors only show once a field is touched, so it stays quiet until the user leaves the field."
+    },
+    {
+      "id": 10,
+      "postId": 4,
+      "parent_id": null,
+      "user": "Carlos Gomes",
+      "date": "2026-09-14",
+      "content": "This changed how I structure every new project."
+    },
+    {
+      "id": 11,
+      "postId": 6,
+      "parent_id": null,
+      "user": "Beatriz Oliveira",
+      "date": "2026-08-05",
+      "content": "Is there a way to stop it from writing changes back to the file?"
+    },
+    {
+      "id": 12,
+      "postId": 6,
+      "parent_id": 11,
+      "user": "Rui Almeida",
+      "date": "2026-08-05",
+      "content": "Point it at a .js file that exports the data instead of a .json file. Changes then stay in memory."
+    }
+  ]
+}
