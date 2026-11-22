@@ -9,16 +9,11 @@ import {
 } from "@mui/material";
 import { Form, FormikProvider, useFormik } from "formik";
 // react
-import {
-    useEffect,
-    useState
-} from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 // hooks
 import useGlobalState from "../hooks/useContext";
 import { CommentForm } from "../types/Comment";
-// types
-import { Post } from "../types/Post";
 // components
 import { PostCommentsList } from "./sections/PostCommentList";
 //icons
@@ -28,13 +23,14 @@ import {
 } from "react-icons/cg";
 //
 import * as Yup from 'yup';
+import { today } from "../utils";
 
 export function PostDetails() {
-    const [post, setPost] = useState<Post | undefined>();
     const [onComment, setComment] = useState(false);
 
-    const { getPost, newComment } = useGlobalState();
+    const { getPost, addComment } = useGlobalState();
     const { id = '' } = useParams();
+    const post = getPost(+id);
 
     const handleOpenComment = () => {
         setComment(true);
@@ -47,7 +43,7 @@ export function PostDetails() {
 
     const defaultComment: CommentForm = {
         content: "",
-        date: "2022-08-23",
+        date: today(),
         parent_id: null,
         user: "Bruno Silva",
         postId: post ? post.id : -1,
@@ -59,16 +55,12 @@ export function PostDetails() {
             content: Yup.string().required("Required! Cannot be empty.")
         }),
         onSubmit: async (values) => {
-            post && newComment(post.id, values)
+            if (post) await addComment(post.id, values);
             handleCloseComment();
         }
     });
 
     const { touched, errors, handleSubmit, getFieldProps } = commentForm;
-
-    useEffect(() => {
-        if (!post) setPost(getPost(+id));
-    }, [getPost, post, id]);
 
     return (
         <>

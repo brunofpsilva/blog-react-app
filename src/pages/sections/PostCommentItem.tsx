@@ -24,6 +24,7 @@ import {
 import useGlobalState from "../../hooks/useContext";
 //
 import * as Yup from 'yup';
+import { today } from "../../utils";
 import { CgCloseO, CgComment, CgMailReply } from "react-icons/cg";
 
 interface IProps {
@@ -38,7 +39,7 @@ export function PostCommentsItem({
     levelReply
 }: IProps) {
     const [onReply, setReply] = useState(false);
-    const { newReply } = useGlobalState();
+    const { addComment } = useGlobalState();
 
     const handleOpenReply = () => {
         setReply(true);
@@ -51,7 +52,7 @@ export function PostCommentsItem({
 
     const defaultReply: CommentForm = {
         content: "",
-        date: "2022-08-23",
+        date: today(),
         parent_id: comment.id,
         user: "Bruno Silva",
         postId: comment.postId,
@@ -63,7 +64,7 @@ export function PostCommentsItem({
             content: Yup.string().required("Required! Cannot be empty.")
         }),
         onSubmit: async (values) => {
-            newReply(comment.postId, values)
+            await addComment(comment.postId, values);
             handleCloseReply();
         }
     });

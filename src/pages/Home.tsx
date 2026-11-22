@@ -1,6 +1,7 @@
 // mui
 import {
     alpha,
+    Container,
     Card,
     Divider,
     Grid,
@@ -8,7 +9,7 @@ import {
     styled,
     Typography
 } from "@mui/material";
-import { Container } from "@mui/system";
+
 // react
 import {
     Link,
@@ -20,7 +21,7 @@ import useGlobalState from "../hooks/useContext";
 // icons
 import { CgComment } from "react-icons/cg";
 
-const CardStyle = styled(Card)(({ theme }) => ({
+const CardStyle = styled(Card)(() => ({
     padding: 20,
     minHeight: 200,
     boxShadow: `0 0 1px 0 ${alpha("#000", 0.15)}, 0 12px 20px -4px ${alpha("#000", 0.10)}`,
@@ -54,9 +55,7 @@ export default function Home() {
                 {posts.map((post: Post) => (
                     <Grid
                         key={post.id}
-                        item
-                        md={3}
-                        xs={12}>
+                        size={{ xs: 12, md: 3 }}>
                         <CardStyle>
 
                             <Typography variant="overline">
@@ -80,9 +79,9 @@ export default function Home() {
 
                             <Stack
                                 direction="row"
-                                alignItems="flex-end"
                                 sx={{
-                                    typography: 'body2',
+                                    alignItems: "flex-end",
+                                    typography: "body2",
                                     flex: 1
                                 }}>
                                 <CgComment size={20} color="#919EAB" />

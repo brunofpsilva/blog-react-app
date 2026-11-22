@@ -16,7 +16,7 @@ import {
     useFormik
 } from "formik";
 // react
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 // types
 import { Comment, CommentForm } from "../types/Comment";
 // hooks
@@ -26,7 +26,7 @@ import * as Yup from 'yup';
 
 interface IProps {
     comment: Comment;
-    action: any;
+    action: ReactNode;
     levelReply: number;
     hasReply?: boolean
 }
@@ -67,7 +67,7 @@ export function CustomListItem({
             content: Yup.string().required("Required! Cannot be empty.")
         }),
         onSubmit: async (values) => {
-            editComment(comment.id, values)
+            await editComment(comment.id, values);
             handleCloseEdit()
         }
     })
@@ -92,7 +92,11 @@ export function CustomListItem({
 
             <ListItemText
                 primary={comment.user}
-                primaryTypographyProps={{ variant: 'subtitle1' }}
+                slotProps={{
+                    primary: { variant: 'subtitle1' },
+                    // the edit form lives here, and a <form> is not allowed inside the default <p>
+                    secondary: { component: 'div' }
+                }}
                 secondary={
                     <>
                         <Typography
@@ -114,7 +118,7 @@ export function CustomListItem({
                                     size="small"
                                     onClick={handleOpenEdit}
                                     sx={{ display: "block", mt: 1 }}>
-                                    Editar
+                                    Edit
                                 </Button>
                             </>
                             :
