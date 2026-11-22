@@ -38,7 +38,7 @@ export function PostCommentsItem({
     levelReply
 }: IProps) {
     const [onReply, setReply] = useState(false);
-    const { newReply } = useGlobalState();
+    const { addComment } = useGlobalState();
 
     const handleOpenReply = () => {
         setReply(true);
@@ -63,7 +63,7 @@ export function PostCommentsItem({
             content: Yup.string().required("Required! Cannot be empty.")
         }),
         onSubmit: async (values) => {
-            newReply(comment.postId, values)
+            await addComment(comment.postId, values);
             handleCloseReply();
         }
     });

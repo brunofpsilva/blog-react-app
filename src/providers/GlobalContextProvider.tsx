@@ -3,10 +3,13 @@ import axios from "axios";
 // react
 import {
     createContext,
-    ReactNode,
-    useEffect,
-    useState
+    ReactNode
 } from "react";
+// react-query
+import {
+    useQuery,
+    useQueryClient
+} from "@tanstack/react-query";
 // types
 import {
     Comment,
@@ -14,29 +17,22 @@ import {
 } from "../types/Comment";
 import { Post } from "../types/Post";
 // utils
-import {
-    _addReply,
-    _nest
-} from "../utils";
+import { _nest } from "../utils";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export type GlobalContextProps = {
     posts: Post[];
-    fetchPosts: () => void;
-    newComment: (post: string | number, comment: CommentForm) => void;
-    newReply: (post: string | number, comment: CommentForm) => void;
-    editComment: (id: number, comment: CommentForm) => void;
+    addComment: (post: string | number, comment: CommentForm) => Promise<void>;
+    editComment: (id: number, comment: CommentForm) => Promise<void>;
     getPost: (post: number) => Post | undefined;
 }
 
 const initialState: GlobalContextProps = {
     posts: [],
-    fetchPosts: () => { },
-    newComment: (_post: string | number, _comment: CommentForm) => { },
-    newReply: (_post: string | number, _comment: CommentForm) => { },
-    editComment: (_id: number, _comment: CommentForm) => { },
-    getPost: (_post: number) => { return undefined }
+    addComment: async () => { },
+    editComment: async () => { },
+    getPost: () => undefined
 }
 
 export const GlobalContext = createContext(initialState);
@@ -45,82 +41,43 @@ type GlobalProviderProps = {
     children: ReactNode;
 }
 
+const fetchPosts = async (): Promise<Post[]> => {
+    const [{ data: posts }, { data: comments }] = await Promise.all([
+        axios.get<Omit<Post, "comments">[]>(`${API_URL}/posts`),
+        axios.get<Comment[]>(`${API_URL}/comments`),
+    ]);
+    const roots = _nest(comments);
+
+    return posts.map((post) => ({
+        ...post,
+        // json-server stores postId as a string for comments created through /posts/:id/comments
+        comments: roots.filter((comment) => Number(comment.postId) === post.id)
+    }));
+}
+
 export function GlobalProvider({ children }: GlobalProviderProps) {
-    const [posts, setPosts] = useState<Post[]>([]);
+    const queryClient = useQueryClient();
+    const { data: posts = [] } = useQuery({ queryKey: ["posts"], queryFn: fetchPosts });
 
-    const fetchPosts = async () => {
-        let nestedComments: Comment[] = [];
-        const posts: Post[] = await (await fetch(`${API_URL}/posts`)).json();
-        const comments: Comment[] = await (await fetch(`${API_URL}/comments`)).json();
+    const refetchPosts = () => queryClient.invalidateQueries({ queryKey: ["posts"] });
 
-        comments.map((comment) => comment.replyComments = []);
-        nestedComments = _nest(comments);
-
-        posts.map((post) => {
-            post.comments = [];
-            nestedComments.map(comment => {
-                // eslint-disable-next-line
-                if (post.id == comment.postId) {
-                    post.comments.push(comment);
-                }
-                return null;
-            })
-            return null;
-        })
-
-        setPosts(posts);
-    }
-
-    const newComment = async (post: string | number, comment: CommentForm) => {
-        // eslint-disable-next-line
-        const index = posts.findIndex(_post => _post.id == post);
-
-        posts[index].comments.push({
-            content: comment.content,
-            date: comment.date,
-            id: -1,
-            parent_id: comment.parent_id,
-            postId: comment.postId,
-            replyComments: [],
-            user: comment.user
-        });
+    const addComment = async (post: string | number, comment: CommentForm) => {
         await axios.post(`${API_URL}/posts/${post}/comments`, comment);
-    }
-
-    const newReply = async (post: string | number, comment: CommentForm) => {
-        const response = await axios.post(`${API_URL}/posts/${post}/comments`, comment);
-        // eslint-disable-next-line
-        const index = posts.findIndex(_post => _post.id == post);
-        const comments = _addReply(posts[index].comments, response.data);
-
-        setPosts(current => {
-            return {
-                ...current,
-                replyComments: comments
-            }
-        });
+        await refetchPosts();
     }
 
     const editComment = async (id: number, comment: CommentForm) => {
-        await axios.put(`${API_URL}/comments/${id}/`, comment);
-        window.location.reload()
+        await axios.put(`${API_URL}/comments/${id}`, comment);
+        await refetchPosts();
     }
 
-    const getPost = (_id: number) => {
-        return posts.find((post) => post.id === _id);
-    }
-
-    useEffect(() => {
-        fetchPosts()
-    }, [])
+    const getPost = (id: number) => posts.find((post) => post.id === id);
 
     return (
         <GlobalContext.Provider
             value={{
                 posts,
-                fetchPosts,
-                newReply,
-                newComment,
+                addComment,
                 editComment,
                 getPost
             }}>

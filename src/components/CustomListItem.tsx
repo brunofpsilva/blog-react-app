@@ -67,7 +67,7 @@ export function CustomListItem({
             content: Yup.string().required("Required! Cannot be empty.")
         }),
         onSubmit: async (values) => {
-            editComment(comment.id, values)
+            await editComment(comment.id, values);
             handleCloseEdit()
         }
     })
