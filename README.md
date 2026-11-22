@@ -2,6 +2,10 @@
 
 A small blog built for a 2022 technical challenge: a feed of posts, a page per post, and threaded comments you can add, reply to and edit. Data comes from a REST API, mocked locally with [json-server](https://github.com/typicode/json-server).
 
+**Live demo: https://brunofpsilva.github.io/blog-react-app/**
+
+The demo has no backend. [MSW](https://mswjs.io/) answers the API calls in the browser from the same sample data, so you can comment, reply and edit, and your changes reset when you reload the page.
+
 ![Posts feed](docs/home.png)
 
 ![Post with nested comments](docs/post.png)
@@ -28,6 +32,7 @@ The API reads and writes `db.json`, so comments you add are saved there. Run `gi
 | `npm test` | Unit tests (Vitest) |
 | `npm run lint` | ESLint |
 | `npm run build` | Type-check and build to `dist/` |
+| `npm run build:pages` | Build for GitHub Pages, with the API mocked by MSW |
 
 ### Configuration
 
@@ -41,7 +46,10 @@ The API base URL comes from `VITE_API_URL` (default in `.env`). To point the app
 - Formik + Yup for forms and validation
 - React Router
 - json-server as the mock backend
+- MSW for the GitHub Pages demo
 - Vitest and ESLint, run in CI by GitHub Actions
+
+Every push to `master` deploys the demo to GitHub Pages ([workflow](.github/workflows/pages.yml)).
 
 ## How comments work
 
