@@ -92,7 +92,7 @@ export function CustomListItem({
 
             <ListItemText
                 primary={comment.user}
-                primaryTypographyProps={{ variant: 'subtitle1' }}
+                slotProps={{ primary: { variant: 'subtitle1' } }}
                 secondary={
                     <>
                         <Typography
